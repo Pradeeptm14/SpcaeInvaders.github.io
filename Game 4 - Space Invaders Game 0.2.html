@@ -1,0 +1,1078 @@
+<html>
+    <body>
+        <canvas id = "My Game Space" width="1250" height="700" style="background-color: black"></canvas>
+        
+        <script>
+                var g_Canvas = document.getElementById("My Game Space");
+                var g_Context = g_Canvas.getContext("2d");
+                
+                var g_FrameRate = 30;
+                var g_TravelInterval = 1000/g_FrameRate;
+            
+                
+                var g_Alien1Array = [];
+                var g_Alien1_BMA = [0,0,1,0,0,0,1,0,0,
+                                    0,0,0,1,0,1,0,0,0,
+                                    0,0,1,1,1,1,1,0,0,
+                                    0,1,1,0,1,0,1,1,0,
+                                    1,1,1,1,1,1,1,1,1,
+                                    1,0,1,1,1,1,1,0,1,
+                                    1,0,1,1,1,1,1,0,1,
+                                    0,0,0,1,0,1,0,0,0,
+                                    0,0,1,1,0,1,1,0,0];
+            
+//                var g_Alien2Array = [];
+//                var g_Alien2_BMA = [0,0,1,0,0,0,1,0,0,
+//                                    1,0,0,1,0,1,0,0,1,
+//                                    1,0,1,1,1,1,1,0,1,
+//                                    1,1,1,0,1,0,1,1,1,
+//                                    0,1,1,1,1,1,1,1,0,
+//                                    0,0,1,1,1,1,1,0,0,
+//                                    0,0,1,1,1,1,1,0,0,
+//                                    0,0,0,1,0,1,0,0,0,
+//                                    0,0,1,1,0,1,1,0,0]; 
+            
+                var g_Alien2Array = [];
+                var g_Alien2_BMA = [0,0,1,0,0,0,0,0,1,0,0,
+                                    1,0,0,1,0,0,0,1,0,0,1,
+                                    1,0,1,1,1,1,1,1,1,0,1,
+                                    1,1,1,0,1,1,1,0,1,1,1,
+                                    1,1,1,1,1,1,1,1,1,1,1,
+                                    0,1,1,1,1,1,1,1,1,1,0,
+                                    0,0,1,0,0,0,0,0,1,0,0,
+                                    0,1,0,0,0,0,0,0,0,1,0];
+            
+                var g_Alien3Array = [];
+                var g_Alien3_BMA = [0,0,0,1,1,1,0,0,0,
+                                    0,0,1,1,1,1,1,0,0,
+                                    1,1,0,0,1,0,0,1,1,
+                                    1,1,1,1,1,1,1,1,1,
+                                    0,0,1,1,1,1,1,0,0,
+                                    0,1,0,1,0,1,0,1,0,
+                                    1,0,0,0,0,0,0,0,1];
+            
+                var g_Alien4Array = [];
+                var g_Alien4_BMA = [0,0,1,0,0,0,0,0,1,0,0,
+                                    1,0,0,1,0,0,0,1,0,0,1,
+                                    1,0,1,1,1,1,1,1,1,0,1,
+                                    1,1,1,0,1,1,1,0,1,1,1,
+                                    1,1,1,1,1,1,1,1,1,1,1,
+                                    0,1,1,1,1,1,1,1,1,1,0,
+                                    0,0,1,0,0,0,0,0,1,0,0,
+                                    0,1,0,0,0,0,0,0,0,1,0];
+            
+                var g_Alien5Array = [];
+                var g_Alien5_BMA = [0,0,0,1,1,1,0,0,0,
+                                    0,0,1,1,1,1,1,0,0,
+                                    1,1,0,0,1,0,0,1,1,
+                                    1,1,1,1,1,1,1,1,1,
+                                    0,0,1,1,1,1,1,0,0,
+                                    0,1,0,1,0,1,0,1,0,
+                                    1,0,0,0,0,0,0,0,1];
+            
+            
+                var g_MotherSpaceShip_BMA = [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,
+                                             0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,
+                                             0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
+                                             0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,
+                                             1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                             0,0,1,1,1,0,0,1,1,0,0,1,1,1,0,0,
+                                             0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0];
+            
+                var g_PlayerSpaceship_BMA = [0,0,0,0,0,1,1,0,0,0,0,0,
+                                             0,0,0,0,1,1,1,1,0,0,0,0,
+                                             0,0,0,0,1,0,0,1,0,0,0,0,
+                                             0,0,0,0,1,0,0,1,0,0,0,0,
+                                             0,1,1,0,1,1,1,1,0,1,1,0,
+                                             1,1,1,1,1,1,1,1,1,1,1,1,
+                                             1,1,1,1,1,1,1,1,1,1,1,1,
+                                             1,0,0,1,1,1,1,1,1,0,0,1,
+                                             1,1,0,1,1,1,1,1,1,0,1,1,
+                                             0,0,0,0,0,1,1,0,0,0,0,0];
+            
+               /* var g_SpaceShipBullets_BMA = [0,0,0,1,1,1,0,0,0,
+                                              0,0,1,1,1,1,1,0,0,
+                                              1,1,1,1,1,1,1,1,1,
+                                              1,1,1,1,1,1,1,1,1,
+                                              0,1,1,1,1,1,1,1,0,
+                                              0,0,1,1,1,1,1,0,0,
+                                              0,0,0,1,1,1,0,0,0,
+                                              0,0,1,1,1,1,1,0,0,
+                                              0,1,0,1,0,1,0,1,0];*/
+            
+                var g_SpaceShipBullets_BMA = [1,1]; 
+                var g_AlienBullets_BMA = [1,2]; 
+                
+                 class C_SpaceShipBullets
+                {
+                    constructor(l_SPBulletx,l_SPBullety)
+                        {
+                            this.SPBulletXpos = l_SPBulletx;
+                            this.SPBulletYpos = l_SPBullety;
+                            this.SPBulletSize = 20;
+                        }
+                    M_DrawFood(l_Context)
+                    {
+                        
+                        l_Context.fillStyle = "red";
+                        l_Context.fillRect(this.SPBulletXpos,this.SPBulletYpos,this.SPBulletSize,this.SPBulletSize);
+                    }
+                }
+            
+                class C_Pixel
+                {
+                        constructor(l_x,l_y,l_s,l_color)
+                        {
+                            this.PixelXpos = l_x;
+                            this.PixelYpos = l_y;
+                            this.PixelSize = l_s;
+                            this.color = l_color;
+                         
+                        }
+                        
+                        M_DrawPixel(l_Context)
+                        {
+                            
+                           l_Context.fillStyle = this.color;
+                            l_Context.fillRect(this.PixelXpos,this.PixelYpos,this.PixelSize,this.PixelSize);   
+                            
+                        }
+                 }
+                    
+                
+                class C_Grid
+                {
+                     constructor(l_x,l_y,l_s,l_r,l_c,l_BMA,l_color)
+                        {
+                            this.GridXpos = l_x;
+                            this.GridYpos = l_y;
+                            this.GridSize = l_s;
+                            this.GridRow = l_r;
+                            this.GridCol = l_c;
+                            this.BMA = l_BMA;
+                            this.GridArray = [];
+                            this.color = l_color;
+                            this.M_CreateGrid();
+                            this.MoveLeftFlag = 0;
+                            this.MoveRightFlag = 0;
+                            this.MoveUpFlag = 0;
+                            this.MoveDownFlag = 0;
+                            this.MoveSpeed = 25;
+                            this.ISActive = true;
+//                            this.XposDir = 1;
+                         
+                         
+                        }
+                    
+                    M_CreateGrid()
+                    {
+                        var l_x = this.GridXpos;
+                        var l_y = this.GridYpos;
+                        
+                        for(var i = 0; i<this.GridRow*this.GridCol ; i++)
+                            {
+                                this.GridArray[i] = new C_Pixel(l_x,l_y,this.GridSize,this.color);
+                                l_x += this.GridSize;
+
+                                 if((i+1) % this.GridCol == 0)
+                                   {
+                                        l_x = this.GridXpos;
+                                        l_y += this.GridSize;
+                                   }
+                            }
+                    }
+                    
+                    M_DrawGrid(l_Context)
+                    {
+                        if(this.ISActive == true)
+                            {
+                                for(var i = 0; i < this.GridArray.length; i++)
+                                {
+                                    if(this.BMA[i] == 1)
+                                        {
+                                             this.GridArray[i].M_DrawPixel(l_Context);
+                                        }
+                                }
+                                
+                            }
+                        
+                    }
+                    
+                    M_Move()
+                    {
+                        /*for(var i = 0; i < this.GridArray.length; i++)
+                            {
+                                this.GridArray[i].GridXpos -= this.MoveSpeed ;
+                                this.XposDir++;
+                            }*/
+                        if(this.MoveLeftFlag == 1)
+                            {
+                                
+                                for(var j = 0; j<this.GridArray.length; j++)
+                                    {
+                                        this.GridArray[j].PixelXpos -= this.MoveSpeed;
+                                       
+                                    }
+                                
+                            }
+                        
+                         if(this.MoveUpFlag == 1)
+                            {
+                                for(var j = 0; j<this.GridArray.length; j++)
+                                    {
+                                        this.GridArray[j].PixelYpos -= this.MoveSpeed;
+                                    
+                                    }
+                                
+                            }
+                        
+                        if(this.MoveRightFlag == 1)
+                            {
+                                for(var j = 0; j<this.GridArray.length; j++)
+                                    {
+                                        this.GridArray[j].PixelXpos += this.MoveSpeed;
+                                    }
+                                
+                            }
+                        
+                        if(this.MoveDownFlag == 1)
+                            {
+                                for(var j = 0; j<this.GridArray.length; j++)
+                                    {
+                                        this.GridArray[j].PixelYpos += this.MoveSpeed;
+                                    }
+                                
+                            }
+                    }
+                    
+                }
+            var g_DelayTime = 0;
+            
+            function f_MoveAlien()
+            {
+                  g_DelayTime++;   
+                if(g_DelayTime % 30 == 0)
+                    {
+                        
+                       for(var i = 0; i<15 ; i++)
+                        {
+                            g_Alien1Array[i].M_Move();
+                            g_Alien2Array[i].M_Move();
+                            g_Alien3Array[i].M_Move();
+                            g_Alien4Array[i].M_Move();
+                            g_Alien5Array[i].M_Move();
+                            //stepcount++;
+                        } 
+                        
+                        
+                    }
+            }
+            
+            var g_AlienFireBullets =0;
+            function f_MoveAlienBullets()
+            {
+                  g_AlienFireBullets++;   
+                if(g_AlienFireBullets % 4 == 0)
+                    {
+                        g_AlienBullets.M_Move();
+                        
+                        
+                    }
+            }
+            
+            var g_MotherSpaceshipDelayTime = 0;
+            
+            function f_MoveMotherSpaceship()
+            {
+                  g_MotherSpaceshipDelayTime++;   
+                if(g_MotherSpaceshipDelayTime % 10 == 0)
+                    {
+                        g_MotherSpaceShip.M_Move();
+                        
+                    }
+            }
+            
+           var g_MotherSpaceshipActive = true;
+            
+            function f_MotherSpaceshipBoundaryCollision()
+            {
+                 g_MotherSpaceShip.MoveRightFlag =1;
+               if(g_MotherSpaceShip.GridArray[0].PixelXpos >= g_Canvas.width)
+                   {
+                      g_MotherSpaceShip.GridArray[0].PixelXpos =0;
+                      g_MotherSpaceShip = new C_Grid(0,50,7,7,16,g_MotherSpaceShip_BMA,"red");
+//                       g_MotherSpaceShip.MoveRightFlag=0;
+                       console.log(g_MotherSpaceShip.GridArray[0].PixelXpos);
+                   }
+                
+            }
+            
+            
+            function f_BulletBoundaryCollision()
+            {
+                
+                if(g_SpaceShipBullet.GridArray[0].PixelYpos <= 0)
+                {
+//                    console.log(g_SpaceShipBullet.GridYpos);
+                    g_bulletActive = false;
+                    // g_SpaceShipBullet.ISActive = false;
+                }
+                
+                 if(g_AlienBullets.GridArray[0].PixelYpos >= g_Canvas.height)
+                {
+//                    console.log("collided");
+//                    g_AlienBullets = false;
+                    f_AlienFireBullets();
+                 
+                }
+                            
+            }
+            
+             var g_AlienBulletsactive = false;
+            
+           
+            function f_AlienFireBullets()
+            {
+                
+                 g_AlienBulletsactive = true;
+                 var l_randomIndex = Math.floor(Math.random()*15);
+               
+                if(g_Alien1Array[l_randomIndex].ISActive == true)
+                    {
+                        g_AlienBullets.GridArray[0].PixelXpos = g_Alien1Array[l_randomIndex].GridArray[0].PixelXpos + 12; g_AlienBullets.GridArray[0].PixelYpos = g_Alien1Array[l_randomIndex].GridArray[0].PixelYpos + 20;
+                    }
+                      
+                if(g_Alien2Array[l_randomIndex].ISActive == true)
+                    {
+                        g_AlienBullets.GridArray[0].PixelXpos = g_Alien2Array[l_randomIndex].GridArray[0].PixelXpos + 12;
+                        g_AlienBullets.GridArray[0].PixelYpos = g_Alien2Array[l_randomIndex].GridArray[0].PixelYpos + 20;
+
+                    }
+                        
+                if(g_Alien3Array[l_randomIndex].ISActive == true)
+                    {
+                         g_AlienBullets.GridArray[0].PixelXpos = g_Alien3Array[l_randomIndex].GridArray[0].PixelXpos + 12; g_AlienBullets.GridArray[0].PixelYpos = g_Alien3Array[l_randomIndex].GridArray[0].PixelYpos + 20;
+
+                    }
+                        
+                        
+               if(g_Alien4Array[l_randomIndex].ISActive == true)
+                    {
+                          g_AlienBullets.GridArray[0].PixelXpos = g_Alien4Array[l_randomIndex].GridArray[0].PixelXpos + 12; g_AlienBullets.GridArray[0].PixelYpos = g_Alien4Array[l_randomIndex].GridArray[0].PixelYpos + 20;
+                    }
+                      
+                        
+               if(g_Alien5Array[l_randomIndex].ISActive == true)
+                    {
+                        g_AlienBullets.GridArray[0].PixelXpos = g_Alien5Array[l_randomIndex].GridArray[0].PixelXpos + 12; g_AlienBullets.GridArray[0].PixelYpos = g_Alien5Array[l_randomIndex].GridArray[0].PixelYpos + 20;
+
+                    }
+                        
+
+                g_AlienBullets.MoveDownFlag = 1; 
+
+                    
+
+                    
+            }
+            
+            
+            function F_BulletCollisionDetictionWithInvaders()
+            {
+                if(g_bulletActive == true)
+                    {
+                        if(
+                     (g_SpaceShipBullet.GridArray[0].PixelXpos > g_MotherSpaceShip.GridArray[0].PixelXpos)  &&  
+                     
+                     (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_MotherSpaceShip.GridArray[0].PixelXpos + (g_MotherSpaceShip.GridSize * g_MotherSpaceShip.GridCol ))) &&
+                     
+                     (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_MotherSpaceShip.GridArray[0].PixelYpos + (g_MotherSpaceShip.GridSize * g_MotherSpaceShip.GridRow )))
+                     )
+                        {
+                          g_bulletActive =false;
+                            g_MotherSpaceshipActive =false;
+                            g_MotherSpaceShip.GridArray[0].PixelXpos =0;
+                           
+                          console.log("hit");  
+                        }
+                        
+                    }
+                
+                if(g_bulletActive == true)
+                    {
+                        for(var i =0; i<15 ; i++)
+                            {
+                            if(
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos > g_Alien1Array[i].GridArray[0].PixelXpos)  &&  
+                                (g_Alien1Array[i].ISActive == true) &&
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_Alien1Array[i].GridArray[0].PixelXpos + (g_Alien1Array[i].GridSize * g_Alien1Array[i].GridCol ))) &&
+
+                             (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_Alien1Array[i].GridArray[0].PixelYpos + (g_Alien1Array[i].GridSize * g_Alien1Array[i].GridRow )))
+                             )
+                            
+                                {
+                                    g_bulletActive =false;
+                                    g_Alien1Array[i].ISActive = false;
+//                                    console.log("hit"); 
+                                    break;
+                                }
+                               
+                            else if(
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos > g_Alien2Array[i].GridArray[0].PixelXpos)  &&  
+                                 (g_Alien2Array[i].ISActive == true) &&
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_Alien2Array[i].GridArray[0].PixelXpos + (g_Alien2Array[i].GridSize * g_Alien2Array[i].GridCol ))) &&
+
+                             (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_Alien2Array[i].GridArray[0].PixelYpos + (g_Alien2Array[i].GridSize * g_Alien2Array[i].GridRow )))
+                             )
+                             
+                                {
+                                    g_bulletActive =false;
+                                   g_Alien2Array[i].ISActive = false;
+//                                    console.log("hit"); 
+                                    break;
+                                }
+                                
+                            else if(
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos > g_Alien3Array[i].GridArray[0].PixelXpos)  &&  
+                                 (g_Alien3Array[i].ISActive == true) &&
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_Alien3Array[i].GridArray[0].PixelXpos + (g_Alien3Array[i].GridSize * g_Alien3Array[i].GridCol ))) &&
+
+                             (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_Alien3Array[i].GridArray[0].PixelYpos + (g_Alien3Array[i].GridSize * g_Alien3Array[i].GridRow )))
+                             )
+                            
+                                 {
+                                    g_bulletActive =false;
+                                    g_Alien3Array[i].ISActive = false;
+//                                    console.log("hit");  
+                                     break;
+                                }
+                                
+                            else if(
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos > g_Alien4Array[i].GridArray[0].PixelXpos)  &&  
+                                 (g_Alien4Array[i].ISActive == true) &&
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_Alien4Array[i].GridArray[0].PixelXpos + (g_Alien4Array[i].GridSize * g_Alien4Array[i].GridCol ))) &&
+
+                             (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_Alien4Array[i].GridArray[0].PixelYpos + (g_Alien4Array[i].GridSize * g_Alien4Array[i].GridRow )))
+                             )
+                            
+                                {
+                                    g_bulletActive =false;
+                                    g_Alien4Array[i].ISActive = false;
+//                                    console.log("hit");  
+                                    break;
+                                }
+                                 
+                            else if(
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos > g_Alien5Array[i].GridArray[0].PixelXpos)  &&  
+                                 (g_Alien5Array[i].ISActive == true) &&
+                             (g_SpaceShipBullet.GridArray[0].PixelXpos < (g_Alien5Array[i].GridArray[0].PixelXpos + (g_Alien5Array[i].GridSize * g_Alien5Array[i].GridCol ))) &&
+
+                             (g_SpaceShipBullet.GridArray[0].PixelYpos < (g_Alien5Array[i].GridArray[0].PixelYpos + (g_Alien5Array[i].GridSize * g_Alien5Array[i].GridRow )))
+                             )
+                                
+                                {
+                                    g_bulletActive =false;
+                                    g_Alien5Array[i].ISActive = false;
+                                    g_SpaceShipBullet.GridArray[0].PixelYpos = 600 ;
+//                                    console.log(">>>>>hit");  
+                                    break;
+                                }
+                            
+                    }
+                    }
+            
+                       
+                 
+//                 if(g_SpaceShipBullet.GridArray[7].PixelXpos== g_MotherSpaceShip.GridArray[0].PixelXpos)
+//                    {
+////                        g_MotherSpaceshipActive = false;
+//                        console.log("hit");
+//                    }
+                
+                
+            }
+            
+             function f_BulletCollisionDetictionWithPlayership()
+            {
+                
+                 if(
+                     (g_AlienBullets.GridArray[0].PixelXpos > g_PlayerSpaceship.GridArray[0].PixelXpos)  &&  
+                        (g_PlayerSpaceship.ISActive == true) &&
+                     (g_AlienBullets.GridArray[0].PixelXpos < (g_PlayerSpaceship.GridArray[0].PixelXpos + (g_PlayerSpaceship.GridSize * g_PlayerSpaceship.GridCol ))) &&
+                     
+                     (g_AlienBullets.GridArray[0].PixelYpos > (g_PlayerSpaceship.GridArray[0].PixelYpos + (g_PlayerSpaceship.GridSize * g_PlayerSpaceship.GridRow )))
+                     )
+                        {
+////                          g_bulletActive =false;
+////                            g_PlayerSpaceship =false;
+//                            g_PlayerSpaceship.GridArray[0].PixelXpos =0;
+                           
+                          console.log("<<<<<<<hit");  
+                        }
+                        
+                    
+                
+            }
+            
+            
+            var alienMoveDown = 0;
+            var alienMoveRight = 0;
+            
+            function f_AlienBoundaryCollision()
+            {
+                
+                if(g_Alien1Array[0].GridArray[0].PixelXpos <= 5)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien1Array[j].MoveDownFlag = 1; 
+                             g_Alien1Array[j].MoveLeftFlag = 0;
+                             
+                            
+                             if(g_Alien1Array[0].GridArray[0].PixelYpos ==225)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien1Array[0].GridArray[0].PixelYpos ==275)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien1Array[0].GridArray[0].PixelYpos ==325)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien1Array[0].GridArray[0].PixelYpos ==375)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien1Array[0].GridArray[0].PixelYpos ==425)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveRightFlag=1;
+                                 }
+                         }  
+                }
+           
+                
+                 if(g_Alien1Array[14].GridArray[8].PixelXpos >= g_Canvas.width)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien1Array[j].MoveRightFlag = 0; 
+                             g_Alien1Array[j].MoveDownFlag = 1;
+                             
+                            
+                             if(g_Alien1Array[0].GridArray[0].PixelYpos ==250)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                             if(g_Alien1Array[0].GridArray[0].PixelYpos ==300)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien1Array[0].GridArray[0].PixelYpos ==350)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien1Array[0].GridArray[0].PixelYpos ==400)
+                                 {
+                                     g_Alien1Array[j].MoveDownFlag=0;
+                                     g_Alien1Array[j].MoveLeftFlag=1;
+                                 }
+                         }  
+                }
+                
+               if(g_Alien2Array[0].GridArray[0].PixelXpos <= 5)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var k = 0; k<15 ; k++)
+                        {
+                             g_Alien2Array[k].MoveDownFlag = 1; 
+                             g_Alien2Array[k].MoveLeftFlag = 0;
+                             
+                            
+                             if(g_Alien2Array[0].GridArray[0].PixelYpos ==185)
+                                 {
+                                     g_Alien2Array[k].MoveDownFlag=0;
+                                     g_Alien2Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien2Array[0].GridArray[0].PixelYpos ==235)
+                                 {
+                                     g_Alien2Array[k].MoveDownFlag=0;
+                                     g_Alien2Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien2Array[0].GridArray[0].PixelYpos ==285)
+                                 {
+                                     g_Alien2Array[k].MoveDownFlag=0;
+                                     g_Alien2Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien2Array[0].GridArray[0].PixelYpos ==335)
+                                 {
+                                     g_Alien2Array[k].MoveDownFlag=0;
+                                     g_Alien2Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien2Array[0].GridArray[0].PixelYpos ==385)
+                                 {
+                                     g_Alien2Array[k].MoveDownFlag=0;
+                                     g_Alien2Array[k].MoveRightFlag=1;
+                                 }
+                         }  
+                }
+                
+                
+                if(g_Alien2Array[14].GridArray[8].PixelXpos >= g_Canvas.width)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien2Array[j].MoveRightFlag = 0; 
+                             g_Alien2Array[j].MoveDownFlag = 1;
+                             
+                            
+                             if(g_Alien2Array[0].GridArray[0].PixelYpos ==210)
+                                 {
+                                     g_Alien2Array[j].MoveDownFlag=0;
+                                     g_Alien2Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien2Array[0].GridArray[0].PixelYpos ==260)
+                                 {
+                                     g_Alien2Array[j].MoveDownFlag=0;
+                                     g_Alien2Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien2Array[0].GridArray[0].PixelYpos ==310)
+                                 {
+                                     g_Alien2Array[j].MoveDownFlag=0;
+                                     g_Alien2Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien2Array[0].GridArray[0].PixelYpos ==360)
+                                 {
+                                     g_Alien2Array[j].MoveDownFlag=0;
+                                     g_Alien2Array[j].MoveLeftFlag=1;
+                                 }
+                         }  
+                }
+                
+                
+                if(g_Alien3Array[0].GridArray[0].PixelXpos <= 5)
+                {
+                    
+                        for(var k = 0; k<15 ; k++)
+                        {
+                             g_Alien3Array[k].MoveDownFlag = 1; 
+                             g_Alien3Array[k].MoveLeftFlag = 0;
+                             
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==270)
+                                 {
+                                     g_Alien3Array[k].MoveDownFlag=0;
+                                     g_Alien3Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==320)
+                                 {
+                                     g_Alien3Array[k].MoveDownFlag=0;
+                                     g_Alien3Array[k].MoveRightFlag=1;
+                                 }
+                            
+                               if(g_Alien3Array[0].GridArray[0].PixelYpos ==370)
+                                 {
+                                     g_Alien3Array[k].MoveDownFlag=0;
+                                     g_Alien3Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==420)
+                                 {
+                                     g_Alien3Array[k].MoveDownFlag=0;
+                                     g_Alien3Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==470)
+                                 {
+                                     g_Alien3Array[k].MoveDownFlag=0;
+                                     g_Alien3Array[k].MoveRightFlag=1;
+                                 }
+                         }  
+                }
+                
+                  if(g_Alien3Array[14].GridArray[8].PixelXpos >= g_Canvas.width)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien3Array[j].MoveRightFlag = 0; 
+                             g_Alien3Array[j].MoveDownFlag = 1;
+                             
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==295)
+                                 {
+                                     g_Alien3Array[j].MoveDownFlag=0;
+                                     g_Alien3Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien3Array[0].GridArray[0].PixelYpos ==345)
+                                 {
+                                     g_Alien3Array[j].MoveDownFlag=0;
+                                     g_Alien3Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                             if(g_Alien3Array[0].GridArray[0].PixelYpos ==395)
+                                 {
+                                     g_Alien3Array[j].MoveDownFlag=0;
+                                     g_Alien3Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien3Array[0].GridArray[0].PixelYpos ==445)
+                                 {
+                                     g_Alien3Array[j].MoveDownFlag=0;
+                                     g_Alien3Array[j].MoveLeftFlag=1;
+                                 }
+                         }  
+                }
+                
+                
+               if(g_Alien4Array[0].GridArray[0].PixelXpos <= 5)
+                {
+                    
+                        for(var k = 0; k<15 ; k++)
+                        {
+                             g_Alien4Array[k].MoveDownFlag = 1; 
+                             g_Alien4Array[k].MoveLeftFlag = 0;
+                             
+                            
+                             if(g_Alien4Array[0].GridArray[0].PixelYpos ==308)
+                                 {
+                                     g_Alien4Array[k].MoveDownFlag=0;
+                                     g_Alien4Array[k].MoveRightFlag=1;
+                                 }
+                            
+                             if(g_Alien4Array[0].GridArray[0].PixelYpos ==358)
+                                 {
+                                     g_Alien4Array[k].MoveDownFlag=0;
+                                     g_Alien4Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==408)
+                                 {
+                                     g_Alien4Array[k].MoveDownFlag=0;
+                                     g_Alien4Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==458)
+                                 {
+                                     g_Alien4Array[k].MoveDownFlag=0;
+                                     g_Alien4Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==508)
+                                 {
+                                     g_Alien4Array[k].MoveDownFlag=0;
+                                     g_Alien4Array[k].MoveRightFlag=1;
+                                 }
+                         }  
+                }
+                
+                      
+              if(g_Alien4Array[14].GridArray[8].PixelXpos >= g_Canvas.width)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien4Array[j].MoveRightFlag = 0; 
+                             g_Alien4Array[j].MoveDownFlag = 1;
+                             
+                            
+                             if(g_Alien4Array[0].GridArray[0].PixelYpos ==333)
+                                 {
+                                     g_Alien4Array[j].MoveDownFlag=0;
+                                     g_Alien4Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==383)
+                                 {
+                                     g_Alien4Array[j].MoveDownFlag=0;
+                                     g_Alien4Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==433)
+                                 {
+                                     g_Alien4Array[j].MoveDownFlag=0;
+                                     g_Alien4Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien4Array[0].GridArray[0].PixelYpos ==483)
+                                 {
+                                     g_Alien4Array[j].MoveDownFlag=0;
+                                     g_Alien4Array[j].MoveLeftFlag=1;
+                                 }
+                         }  
+                }
+                
+               if(g_Alien5Array[0].GridArray[0].PixelXpos <= 5)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var k = 0; k<15 ; k++)
+                        {
+                             g_Alien5Array[k].MoveDownFlag = 1; 
+                             g_Alien5Array[k].MoveLeftFlag = 0;
+                             
+                            
+                             if(g_Alien5Array[0].GridArray[0].PixelYpos ==350)
+                                 {
+                                     g_Alien5Array[k].MoveDownFlag=0;
+                                     g_Alien5Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien5Array[0].GridArray[0].PixelYpos ==400)
+                                 {
+                                     g_Alien5Array[k].MoveDownFlag=0;
+                                     g_Alien5Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien5Array[0].GridArray[0].PixelYpos ==450)
+                                 {
+                                     g_Alien5Array[k].MoveDownFlag=0;
+                                     g_Alien5Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien5Array[0].GridArray[0].PixelYpos ==500)
+                                 {
+                                     g_Alien5Array[k].MoveDownFlag=0;
+                                     g_Alien5Array[k].MoveRightFlag=1;
+                                 }
+                            
+                            if(g_Alien5Array[0].GridArray[0].PixelYpos ==550)
+                                 {
+                                     g_Alien5Array[k].MoveDownFlag=0;
+                                     g_Alien5Array[k].MoveRightFlag=1;
+                                 }
+                         }  
+                }
+                
+              if(g_Alien5Array[14].GridArray[8].PixelXpos >= g_Canvas.width)
+                {
+//                    if(alienMoveDown == 0)
+                    
+                        for(var j = 0; j<15 ; j++)
+                        {
+                             g_Alien5Array[j].MoveRightFlag = 0; 
+                             g_Alien5Array[j].MoveDownFlag = 1;
+                             
+                            
+                             if(g_Alien5Array[0].GridArray[0].PixelYpos ==375)
+                                 {
+                                     g_Alien5Array[j].MoveDownFlag=0;
+                                     g_Alien5Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                             if(g_Alien5Array[0].GridArray[0].PixelYpos ==425)
+                                 {
+                                     g_Alien5Array[j].MoveDownFlag=0;
+                                     g_Alien5Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                            if(g_Alien5Array[0].GridArray[0].PixelYpos ==475)
+                                 {
+                                     g_Alien5Array[j].MoveDownFlag=0;
+                                     g_Alien5Array[j].MoveLeftFlag=1;
+                                 }
+                            
+                             if(g_Alien5Array[0].GridArray[0].PixelYpos ==525)
+                                 {
+                                     g_Alien5Array[j].MoveDownFlag=0;
+                                     g_Alien5Array[j].MoveLeftFlag=1;
+                                 }
+                         }  
+                }
+            }
+         
+            
+                function f_ClerScreen()
+                {
+                    
+                    g_Context.clearRect(0,0,g_Canvas.width,g_Canvas.height);
+
+                    g_Context.strokeRect(0,0,g_Canvas.width,g_Canvas.height);
+                  
+                }
+                
+             
+               var g_bulletActive = false;
+                
+                function f_GameLoop()
+                {
+                    f_MoveAlien(); 
+                    f_MoveMotherSpaceship();
+                    f_MoveAlienBullets();
+                    
+                    
+                    g_PlayerSpaceship.M_Move();
+                    g_SpaceShipBullet.M_Move();
+                    //g_AlienBullets.M_Move();
+                    
+                    
+                    
+                    f_MotherSpaceshipBoundaryCollision();
+                    f_BulletBoundaryCollision();
+                    f_AlienBoundaryCollision();
+                    F_BulletCollisionDetictionWithInvaders();
+                    f_BulletCollisionDetictionWithPlayership();
+                   
+                    
+                    //clearScreen
+                    f_ClerScreen();
+                    
+                    for(var i = 0; i<15 ; i++)
+                        {
+                            g_Alien1Array[i].M_DrawGrid(g_Context);
+                            g_Alien2Array[i].M_DrawGrid(g_Context);
+                            g_Alien3Array[i].M_DrawGrid(g_Context);
+                            g_Alien4Array[i].M_DrawGrid(g_Context);
+                            g_Alien5Array[i].M_DrawGrid(g_Context);
+                           
+                        }
+                    if(g_MotherSpaceshipActive == true)
+                        {
+                            g_MotherSpaceShip.M_DrawGrid(g_Context);
+                        }
+                    
+                    g_PlayerSpaceship.M_DrawGrid(g_Context);
+                    
+                    if(g_bulletActive== true)
+                        {
+                            g_SpaceShipBullet.M_DrawGrid(g_Context); 
+                        }
+                    
+                    g_AlienBullets.M_DrawGrid(g_Context);
+             
+                }
+            
+            
+            
+                var l_1x= 204;
+                var l_2x= 200; 
+                var l_3x= 203; 
+                var l_4x= 200; 
+                var l_5x= 203; 
+                    
+                    
+                function f_createAliens()
+                {
+                     
+                    for(var i = 0; i<15 ; i++)
+                        {
+                           
+                            
+                            g_Alien1Array[i] = new C_Grid(l_1x,200,4,9,9,g_Alien1_BMA,"#4eff00");
+                            l_1x += 55; 
+                            
+                            g_Alien2Array[i] = new C_Grid(l_2x,160,4,8,11,g_Alien2_BMA,"#003bff");
+                            l_2x += 55;
+                            
+                            g_Alien3Array[i] = new C_Grid(l_3x,245,4,7,9,g_Alien3_BMA,"#003bff");
+                            l_3x += 55;
+                            
+                             g_Alien4Array[i] = new C_Grid(l_4x,283,4,8,11,g_Alien4_BMA,"#0aff00");
+                            l_4x += 55;
+                            
+                             g_Alien5Array[i] = new C_Grid(l_5x,325,4,7,9,g_Alien5_BMA,"#003bff");
+                            l_5x += 55;
+                            
+                            g_Alien1Array[i].MoveLeftFlag = 1;
+                            g_Alien2Array[i].MoveLeftFlag = 1;
+                            g_Alien3Array[i].MoveLeftFlag = 1;
+                            g_Alien4Array[i].MoveLeftFlag = 1;
+                            g_Alien5Array[i].MoveLeftFlag = 1;
+                        }
+                    
+                    g_MotherSpaceShip = new C_Grid(0,50,7,7,16,g_MotherSpaceShip_BMA,"red");
+//                    g_MotherSpaceShip.MoveRightFlag=1;
+                    g_PlayerSpaceship = new C_Grid(550,600,6,10,12,g_PlayerSpaceship_BMA,"#ffffff");
+                    g_SpaceShipBullet = new C_Grid(581,600,10,1,1,g_SpaceShipBullets_BMA, "red");
+                    g_AlienBullets = new C_Grid(204,200,12,1,2,g_AlienBullets_BMA,"yellow");
+                    
+                }
+            f_createAliens();
+            f_AlienFireBullets();
+            
+              
+          
+             function f_KeyDownEventHandler(l_Event)
+                {
+                    if(l_Event.keyCode == 32 && g_bulletActive == false)
+                    {
+                        g_bulletActive =true; 
+                        g_SpaceShipBullet.GridArray[0].PixelXpos = g_PlayerSpaceship.GridArray[0].PixelXpos + 30;
+                        g_SpaceShipBullet.GridArray[0].PixelYpos = 600 ;
+                        
+                        g_SpaceShipBullet.MoveUpFlag = 1; 
+
+                    }
+                    
+                     if(l_Event.keyCode == 37)
+                        {
+                            g_PlayerSpaceship.MoveLeftFlag = 1;
+//                            console.log("ok");
+                        }
+
+                    if(l_Event.keyCode == 39)
+                        {
+                          g_PlayerSpaceship.MoveRightFlag = 1;
+//                            console.log("ok");
+                        }
+                }
+            
+             function f_KeyUpEventHandler(l_Event)
+                {
+                    
+
+                     if(l_Event.keyCode == 37)
+                        {
+                            g_PlayerSpaceship.MoveLeftFlag = 0;
+                        }
+                    if(l_Event.keyCode == 39)
+                        {
+                            g_PlayerSpaceship.MoveRightFlag = 0;
+                        }
+                }
+                   
+    
+            
+                var SetIntervalID = setInterval(f_GameLoop,g_TravelInterval);
+            
+                window.addEventListener("keydown",f_KeyDownEventHandler);
+                window.addEventListener("keyup",f_KeyUpEventHandler);
+            
+        </script>
+    </body>
+</html>
+
